@@ -1,8 +1,8 @@
 
 
-#Project 2 - Optical Flow
+# Project 2 - Optical Flow
 
-##Overview:
+## Overview:
 
 The goal of the project is to demonstrate optical flow using the Lucas-Kanade method and the Horn-Schunck method. Optical flow is a way to estimate 3D motion in a real world scene based on 2D pixel displacement in images captured of the scene, those images being separated by a time step.  This projection of motion from 3D to 2D means there is some loss of information so our optical flow estimates will not be perfect representations of the 3D motion.  I will explore these two methods for determining optical flow and compare their performance.
 
@@ -15,7 +15,7 @@ Pixels nearby to one another will move in similar directions and thus have simil
 
 The first two assumptions apply equally to both methods, but the last two assumptions are where we some some variation between Lucas-Kanade and Horn-Schunck.  Next I will briefly explain the two methods and how I implemented them.
 
-##Lucas-Kanade: 
+## Lucas-Kanade: 
 
 This method takes both brightness constancy and nearby pixel displacement as totally constant. Using the concept of brightness constancy, we can derive the following equation:  .
 The equation simply means that changing the locations of pixels by u and v will cause zero change in the intensity value of the pixel.  The method leverages this assumption along with the assumption that neighborhood pixels will have the same displacement (u, v) in order to solve for u and v at the target pixel location in an overdetermined system. 
@@ -30,7 +30,7 @@ Record values u and v in their output matrices at the location corresponding to 
 
 Controlling the results of Lucas-Kanade comes from our choice of patch size.
 
-##Horn-Schunck:
+## Horn-Schunck:
 
 This method relaxes both brightness constancy and the nearby pixel displacement constraint.  Instead of assuming neighboring pixels will have the same displacement (constant flow), it assumes they have similar displacements (smooth flow).  It does so via an energy function with the goal of minimizing the energy function to find the best result.  The energy function is:   .
 Where  is a brightness constancy equation and  is a smoothness equation.  The smoothness term is weighted by a parameter lambda which is used to control the effect of one term versus the other in the result. We minimize this energy function via gradient-descent which involves finding partial derivatives of the function with respect to u and with respect to v then deriving update equations from the partial derivatives.  For each iteration of gradient descent, we take a step towards the optimal solution to the energy function and hence the most accurate values of u and v. 
@@ -45,7 +45,7 @@ Repeat this process until u and v converge to their optimal values.
 Controlling the results of Horn-Schunck comes from our choice of lambda.
 
 
-##Experiments:
+## Experiments:
 
 1.Lucas-Kanade on Synthetic Spheres
 
@@ -88,7 +88,7 @@ Obtaining good results with Horn-Schunck was comparable to with Lucas-Kanade.  I
 What I found was that a lambda value of 100 produced the best results from the beginning. From there I scaled lambda even higher until I found satisfactory results.  I found that pushing lambda above a value of 500 caused little change in the output images so this was the value I decided to settle on.  I believe this difference between choices of lambda on synthetic data versus real world data comes from the unreliability of brightness constancy in real world data.  We can ensure brightness constancy in synthetic data, but this must be relaxed when dealing with real world data, even small changes in position can result in different intensity values of corresponding points.  On the other hand, both synthetic and real images share the feature that nearby pixels will often move smoothly so giving the smoothness term priority in the algorithm will highlight objects in the image that are moving cohesively.  
 
 
-##Summary:
+## Summary:
 
 5.  Overall Thoughts on Both Methods
 
