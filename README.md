@@ -47,7 +47,7 @@ Controlling the results of Horn-Schunck comes from our choice of lambda.
 
 ## Experiments:
 
-1.Lucas-Kanade on Synthetic Spheres
+### 1. Lucas-Kanade on Synthetic Spheres
 
 The images on the right show the outputs of Lucas-Kanade on the sphere images when parameterized with different patch sizes.  I found that increasing the patch size improved the accuracy of the vectors within the sphere with the side effect of decreasing accuracy of some points in the background surrounding the sphere. In the left column, you can see that as we use larger patches, the vector field becomes more uniform in direction, thus better informing the sphere’s motion. This is the benefit of a larger patch.
 
@@ -58,7 +58,7 @@ The images showing magnitude of optical flow in the right column demonstrate tha
 My takeaway is that the choice of patch size is an important factor in determining optical flow.  The choice will ultimately be determined by the larger goals of the application using optical flow. There is a tradeoff between the accuracy of the vector directions of the moving objects and the blurring of the edge of the moving objects with the background.  Increasing the patch size will increase the direction accuracy within the object, but decrease accuracy near the edges.  The user will need to decide what is most important for their application when choosing this parameter for Lucas-Kanade.
 
 
-2. Horn-Schunck on Synthetic Spheres
+### 2. Horn-Schunck on Synthetic Spheres
 
 The images on the right show the outputs of Horn-Schunck on the sphere images when parameterized with different lambda values. As mentioned previously, lambda controls how much weight we give to brightness constancy versus smoothness in the overall energy function.  High values of lambda give priority to smoothness and low values of lambda (below zero) give priority to brightness constancy.  With the synthetic sphere data, the brightness constancy can be heavily leveraged because the corresponding pixels between the two time stepped images will retain exact brightness constancy.  This is why we see a nice uniform vector field at lambda of 0.1.  However, in real images, brightness constancy cannot be guaranteed in the same way, even when the time step is small.  Therefore, weighting the smoothness component over the brightness constancy will often yield better results. 
 
@@ -67,7 +67,7 @@ An interesting effect can be seen in the magnitude images where larger values of
 Overall, I would say that a lambda of one, meaning the brightness and smoothness terms are weighted equally, produces the best results for these images.  We can observe uniform vector direction, relative magnitudes where we would expect them and a minimum of inaccuracy near the edges. My takeaway is that the choice of lambda does not have a huge effect on the results in the case of these synthetic sphere images. However, I think the choice of lambda is highly consequential in real world images that are much noisier and less precise.  I will explore this prediction further with the real traffic image experiments shown below.
 
 
-3. Lucas-Kanade on Real Traffic
+### 3. Lucas-Kanade on Real Traffic
 
 The image below is the best result I obtained using Lucas-Kanade on the real traffic images.  This result comes from a patch size of 15 by 15 without blurring or downsampling the input images. 
 
@@ -77,7 +77,7 @@ Obtaining good results using Lucas-Kanade and Horn-Schunck was most difficult be
 My process for obtaining these results was to compute vector field and magnitude images for the same range of patch sizes as the synthetic sphere experiments (n = 3, 5, 11, 21) and use these as a basis for fine tuning the patch size.  I already suspected from the synthetic sphere experiments that larger patch sizes would produce better results and the findings supported this hypothesis.  The best results came from patch sizes of 11 and 21, but I noticed that at n=21 not only were the edges of the vehicles heavily blurred but there was also a decent amount of background showing noticeable magnitude.  From there I simply tuned to find this result which balances capturing vehicle motion with minimizing spurious vectors near the vehicle edges and in the background. I also played around with different combinations of blurring and downsampling the image, but found that they gave little improvement to the output images at this patch size.
 
 
-4. Horn-Schunck on Real Traffic
+### 4. Horn-Schunck on Real Traffic
 
 The image below is the best result I obtained using Horn-Schunck on the real traffic images.  This result comes from a lambda value of 500 without blurring or downsampling the input images.
 
